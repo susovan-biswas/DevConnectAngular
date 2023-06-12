@@ -1,0 +1,9 @@
+<ng-container *ngIf="error">
+    <div>
+        <h4>Internal server error.... </h4>
+        <h5 class="text-danger">Error: {{error.message}}</h5>
+        <code class="empty-5" style="background-color: whitesmoke;">
+            {{error.details}}
+        </code>
+    </div>
+</ng-container>
