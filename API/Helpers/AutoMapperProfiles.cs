@@ -19,6 +19,8 @@ namespace API.Helpers
             CreateMap<Blog, BlogDto>();
             CreateMap<Post, PostDto>();
 
+            CreateMap<UpdateMemberDTO, AppUser>();
+
         }
     }
 }
