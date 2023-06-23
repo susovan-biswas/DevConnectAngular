@@ -42,5 +42,16 @@ export class MembersService {
       );
     }
 
+    setProfilePic(photoId:number){
+      return this.http.put(this.baseUrl+'users/setProfilePic/'+photoId,{});
+    }
+
+    deletePhoto(photoId:number){
+      return this.http.delete(this.baseUrl+'users/deletePhoto/'+photoId,{});
+    }
+
+
+    
+
     
 }
