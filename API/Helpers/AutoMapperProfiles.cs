@@ -21,6 +21,8 @@ namespace API.Helpers
 
             CreateMap<UpdateMemberDTO, AppUser>();
 
+            CreateMap<RegisterDto, AppUser>();
+
         }
     }
 }
