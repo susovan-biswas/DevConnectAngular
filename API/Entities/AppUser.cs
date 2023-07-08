@@ -21,5 +21,7 @@ namespace API.Entities
         public List<Blog> Blogs { get; set; } = new();
         public List<UserLike> LikedByUsers { get; set; }
         public List<UserLike> LikedUsers { get; set; }
+        public List<Messages> SentMessages { get; set; }
+        public List<Messages> ReceivedMessages { get; set; }
     }
 } 
