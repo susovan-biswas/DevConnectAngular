@@ -11,6 +11,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from "ngx-timeago";
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -29,7 +31,8 @@ import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
     TimeagoModule.forRoot(),
-    NgxPageScrollCoreModule.forRoot()
+    NgxPageScrollCoreModule.forRoot(),
+    ModalModule.forRoot()
   ],
   exports:[
     BsDropdownModule,
@@ -43,7 +46,8 @@ import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
     PaginationModule,
     ButtonsModule,
     TimeagoModule,
-    NgxPageScrollCoreModule
+    NgxPageScrollCoreModule,
+    ModalModule
   ]
 })
 export class SharedModule { }
