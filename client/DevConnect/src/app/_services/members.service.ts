@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
-import { map, of, take } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, take } from 'rxjs';
 import { UserParams } from '../_models/userParams';
 import { AccountService } from './account.service';
 import { User } from '../_models/user';
 import { getPaginatedResults, getPaginationHeaders } from './paginationHelper';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { Message } from '../_models/message';
 
 
 
@@ -15,6 +17,9 @@ import { getPaginatedResults, getPaginationHeaders } from './paginationHelper';
 })
 export class MembersService {
   baseUrl = environment.apiUrl;
+  
+ 
+
   members: Member[] = [];
   memberCache = new Map();
   user:User | undefined;
@@ -30,6 +35,10 @@ export class MembersService {
       }
     });
    }
+
+
+
+  
 
    getUserParams(){
     return this.userParams;

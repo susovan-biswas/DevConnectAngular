@@ -16,5 +16,10 @@ namespace API.Interfaces
         Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUsername);
 
         Task<bool> SaveAllAsync();
+        void AddGroup(Group group);
+        void RemoveConnection(Connections connection);
+        Task<Connections> GetConnection(string connectionId);
+         Task<Group> GetMessageGroups(string groupName);
+        Task<Group> GetGroupForConnection(string connectionId);
     }
 }
