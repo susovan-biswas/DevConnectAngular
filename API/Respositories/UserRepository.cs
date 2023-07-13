@@ -36,6 +36,7 @@ namespace API.Respositories
             //              .ToListAsync();
             var query = _context.Users.AsQueryable();//.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking();
             query = query.Where(u =>u.UserName != userParams.CurrentUsername);
+            query = query.Where(u=>u.UserName.ToLower() != "Admin".ToLower());
             query = userParams.OrderBy switch
             {
                 "created" => query.OrderByDescending(u=> u.Created),
@@ -61,11 +62,7 @@ namespace API.Respositories
         {
             return await _context.Users.Include(p=>p.Photos).Include(b=>b.Blogs).ToListAsync();
         }
-
-        public async Task<bool> SaveAllAsync()
-        {
-           return await _context.SaveChangesAsync() >0;
-        }
+       
 
         public void Update(AppUser user)
         {

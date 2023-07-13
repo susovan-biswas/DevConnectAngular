@@ -14,8 +14,7 @@ namespace API.Interfaces
         Task<PagedList<MessageDto>> GetUserMessages(MessagesParams messagesParams);
 
         Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUsername);
-
-        Task<bool> SaveAllAsync();
+        
         void AddGroup(Group group);
         void RemoveConnection(Connections connection);
         Task<Connections> GetConnection(string connectionId);

@@ -12,14 +12,14 @@ namespace API.Controllers
 {
     public class MessagesController:BaseApiController
     {
-        private readonly IUserRepository _userRepository;
+      
         private readonly IMapper _mapper;
-        private readonly IMessagesRepository _messagesRepository;
-        public MessagesController(IUserRepository userRepository, IMessagesRepository messagesRepository, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        
+        public MessagesController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _messagesRepository = messagesRepository;
+            _unitOfWork = unitOfWork;            
             _mapper = mapper;
-            _userRepository = userRepository;
             
         }
 
@@ -28,8 +28,8 @@ namespace API.Controllers
         {
             var username = User.GetUserName();
             if(username.ToLower() == createMessageDto.Recipient.ToLower()) return BadRequest("you cannot send Message to yourself");
-            var sender = await _userRepository.GetUserByUsernameAsync(username);
-            var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.Recipient.ToLower());
+            var sender = await _unitOfWork.userRepository.GetUserByUsernameAsync(username);
+            var recipient = await _unitOfWork.userRepository.GetUserByUsernameAsync(createMessageDto.Recipient.ToLower());
 
             if(recipient == null) return NotFound();
 
@@ -42,9 +42,9 @@ namespace API.Controllers
                 MessageBody = createMessageDto.MessageBody
             };
 
-            _messagesRepository.AddMessage(message);
+            _unitOfWork.messagesRepository.AddMessage(message);
             
-            if(await _messagesRepository.SaveAllAsync()) return Ok(_mapper.Map<MessageDto>(message));
+            if(await _unitOfWork.Complete()) return Ok(_mapper.Map<MessageDto>(message));
 
             return BadRequest("Failed to send message");
         }
@@ -54,7 +54,7 @@ namespace API.Controllers
         public async Task<ActionResult<PagedList<MessageDto>>> GetUserMessages([FromQuery]MessagesParams messagesParams)
         {
             messagesParams.Username = User.GetUserName();
-            var message = await _messagesRepository.GetUserMessages(messagesParams);
+            var message = await _unitOfWork.messagesRepository.GetUserMessages(messagesParams);
 
             Response.AddPaginationHeader(new PaginationHeader(message.CurrentPage, message.PageSize, message.TotalCount, message.TotalPages));
 
@@ -62,19 +62,19 @@ namespace API.Controllers
 
         }
 
-        [HttpGet("thread/{username}")]
-        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
-        {
-            var currentUserName = User.GetUserName();
-            return Ok(await _messagesRepository.GetMessageThread(currentUserName, username));
-        }
+        // [HttpGet("thread/{username}")]
+        // public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+        // {
+        //     var currentUserName = User.GetUserName();
+        //     return Ok(await _unitOfWork.messagesRepository.GetMessageThread(currentUserName, username));
+        // }
 
         [HttpDelete("{id}")]
 
         public async Task<ActionResult> DeleteMessage(int id)
         {
             var username= User.GetUserName();
-            var message = await _messagesRepository.GetMessage(id);
+            var message = await _unitOfWork.messagesRepository.GetMessage(id);
 
             if(message.SenderUsername != username && message.RecipientUsername != username) 
             return Unauthorized();
@@ -85,10 +85,10 @@ namespace API.Controllers
 
             if(message.SenderDeleted && message.RecipientDeleted) 
             {
-                _messagesRepository.DeleteMessage(message);
+                _unitOfWork.messagesRepository.DeleteMessage(message);
             }
 
-            if(await _messagesRepository.SaveAllAsync()) return Ok();
+            if(await _unitOfWork.Complete()) return Ok();
 
             return BadRequest("Problem Deleting Message...Please try again");
         }
